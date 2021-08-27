@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('scm') {
+            steps {
+                echo 'Hello mouni world'
+               git 'https://github.com/wakaleo/game-of-life.git'
+               sh 'ls'
+            }
+        }
+               stage('buildstage') {
+            steps {
+                echo 'build using maven'
+               sh 'mvn clean install'
+               sh 'ls'
+            }
+               }
+               
+                stage('deploystage') {
+            steps {
+                echo 'tomcat using depoly '
+              deploy adapters: [tomcat9(credentialsId: '490b51d8-016c-4b7d-953c-5534d1061095', path: '', url: 'http://18.234.175.136:8080/')], contextPath: 'devops', war: '**/*.war'
+               sh 'ls'
+            }
+        }
+    }
+}
